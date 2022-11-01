@@ -20,13 +20,24 @@ def get_file_names(mydir, str=''):
 if __name__ == '__main__':
     inpath = 'C:\\Users\\JLanini\\Documents\\GitHub\\Ruedi-RW\\Data\\Accounting Spreadsheets\\'
     outpath = 'C:\\Users\\JLanini\\Documents\\GitHub\\Ruedi-RW\\Data\\'
-    sheetname = 'Contract Usage'
-    skip = list(range(5, 46))
+    sheetnames = ['Contract Usage', 'Computations']
+
     dfout = pd.DataFrame()
     for f in get_file_names(inpath):
-        print('Processing ' + f)
-        df = pd.read_excel(f, sheet_name=sheetname, index_col=0, header=4, skiprows=skip, parse_dates=True)
-        df.drop('Total Releases for Contractors', axis=1, inplace=True)
-        dfout=dfout.append(df)
-    dfout=dfout.sort_index()
+        for sheet in sheetnames:
+            print('Processing ' + f)
+            if sheet == 'Contract Usage':
+                skip = list(range(5, 46))
+                df = pd.read_excel(f, sheet_name=sheet, index_col=0, header=4, skiprows=skip, parse_dates=True)
+                df.drop('Total Releases for Contractors', axis=1, inplace=True)
+                dfout = dfout.append(df)
+                df=pd.DataFrame()
+            else:
+                skip = list(range(8, 9))
+                df = pd.read_excel(f, sheet_name=sheet, index_col=1, header=[2,4,5,6], skiprows=skip,
+                                   parse_dates=True)
+                #df.drop('Total Releases for Contractors', axis=1, inplace=True)
+                dfout = dfout.append(df)
+                df=pd.DataFrame()
+    dfout = dfout.sort_index()
     dfout.to_csv(outpath + 'AccountingDataTSAll.csv')
