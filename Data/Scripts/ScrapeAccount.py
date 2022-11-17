@@ -22,22 +22,35 @@ if __name__ == '__main__':
     outpath = 'C:\\Users\\JLanini\\Documents\\GitHub\\Ruedi-RW\\Data\\'
     sheetnames = ['Contract Usage', 'Computations']
 
-    dfout = pd.DataFrame()
+    dfcontracts = pd.DataFrame()
+    dfall= pd.DataFrame()
     for f in get_file_names(inpath):
         for sheet in sheetnames:
+
             print('Processing ' + f)
             if sheet == 'Contract Usage':
                 skip = list(range(5, 46))
                 df = pd.read_excel(f, sheet_name=sheet, index_col=0, header=4, skiprows=skip, parse_dates=True)
                 df.drop('Total Releases for Contractors', axis=1, inplace=True)
-                dfout = dfout.append(df)
+                dfout = dfcontracts.append(df)
                 df=pd.DataFrame()
             else:
-                skip = list(range(8, 9))
-                df = pd.read_excel(f, sheet_name=sheet, index_col=1, header=[2,4,5,6], skiprows=skip,
+                skip = [0,1,2,8,9]
+                df = pd.read_excel(f, sheet_name=sheet, index_col=1, skiprows=skip,
                                    parse_dates=True)
                 #df.drop('Total Releases for Contractors', axis=1, inplace=True)
-                dfout = dfout.append(df)
+                dfcols=df.iloc[:4].replace(np.nan, '')
+                column_names = [' '.join(col_items) for col_items in dfcols.iloc[:4].values.T]
+                df = df.iloc[4:]
+                df.columns = column_names
+                df = df.loc[:, ~df.columns.duplicated()].copy()
+                dfall = pd.concat([dfall,df])
                 df=pd.DataFrame()
-    dfout = dfout.sort_index()
-    dfout.to_csv(outpath + 'AccountingDataTSAll.csv')
+    dfall = dfall.sort_index()
+    dfall=dfall.drop_duplicates(keep='last')
+    dfall=dfall[dfall.index.duplicated() == False]
+    new_date_range = pd.date_range(start="2005-04-01", end="2022-10-31", freq="D")
+    dfall.reindex(new_date_range)
+    dfcontracts = dfcontracts.sort_index()
+    dfall.to_csv(outpath + 'AccountingDataTSAll.csv')
+    dfcontracts.to_csv(outpath + 'AccountingDataTSContracts.csv')
