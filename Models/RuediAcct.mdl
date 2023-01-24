@@ -1,5 +1,5 @@
 # RiverWare_Model 8.5.5 Patch
-# Created 08:16 January 22, 2023
+# Created 05:54 January 24, 2023
 # CADSWES, University of Colorado at Boulder, http://cadswes.colorado.edu/
 # 
 # The catalog command is parsed by the RiverSMART
@@ -53,7 +53,7 @@ ModelAccountCount  72
 ModelSupplyCount   125
 ModelExchangeCount 0
 DST 0
-$ws.Model.FileInfo saveInfo 1 {neumannd} {01-22-2023 08:16:04} {RiverWare 8.5.5} 
+$ws.Model.FileInfo saveInfo 1 {neumannd} {01-24-2023 05:54:17} {RiverWare 8.5.5} 
 $ws.Model.FileInfo comment {}
 $ws.Model.RunHistoryParam MaxModelRunHistoryRecs 1
 $ws.Model.RunHistoryRecord 1 0 {RiverWare 7.1.2} {TMiller} \
@@ -90,7 +90,7 @@ InitCanvasSpec SIMULATION {\
 InitCanvasSpec ACCOUNTING {\
 <InitialViewSpec CanvId="ACCOUNTING" LocType="LocType_CenterAveObj">\
  <Zoom factor="1"/>\
- <CenterPos x="694.5" y="6084.5"/>\
+ <CenterPos x="854.5" y="6156.5"/>\
 </InitialViewSpec>}
 InitCanvasSpec GEOSPATIAL {\
 <InitialViewSpec CanvId="GEOSPATIAL" LocType="LocType_CenterAveObj">\
@@ -532,6 +532,14 @@ $unitMgr end
  </Rule>\
  <Rule>\
   <Key colIndex="1" keyType="FullySpecifiedKey" slot="AccountingData.Contract Account Info" unitType="NONE"/>\
+  <Attribs format="f" prec="0" unitType="NONE" units="NONE"/>\
+ </Rule>\
+ <Rule>\
+  <Key colIndex="0" keyType="FullySpecifiedKey" slot="AccountingData.Fish Pool Release Priority" unitType="NONE"/>\
+  <Attribs format="f" prec="0" unitType="NONE" units="NONE"/>\
+ </Rule>\
+ <Rule>\
+  <Key colIndex="1" keyType="FullySpecifiedKey" slot="AccountingData.Fish Pool Release Priority" unitType="NONE"/>\
   <Attribs format="f" prec="0" unitType="NONE" units="NONE"/>\
  </Rule>\
  <Rule>\
@@ -1831,6 +1839,25 @@ set s "$o.Baseline Account Demand"
 "$s" columnGuiEditEnabled 0
 "$s" defaultAccessMethod 1
 "$s" rowMap3 Reg 1 YEAR  {StringVal: 1900} 1 MONTH 
+"$o" {TableSlot} {Fish Pool Release Priority}
+set s "$o.Fish Pool Release Priority"
+"$s" order 14 
+"$s" UUID {156e3551-e6b7-4d82-bc71-e3a5222f4ddc}
+"$s" resize 6 1
+"$s" setRowLabels {CWCB Fish Pool} {5000 Fish Pool} {5412 Fish Pool} {4 out of 5 Fish Pool} {FWS Fish Pool} {CO Water Trust Fish Pool} 
+"$s" setColumnLabels {Release Priority} 
+"$s" setMaximums NaN 
+"$s" setMinimums NaN 
+"$s" numericCategory 0 integer
+"$s" setUnits 0 
+"$s" setUsrFormat {%f} 
+"$s" setUsrPrecision {2} 
+"$s" row 0 1 
+"$s" row 1 2 
+"$s" row 2 3 
+"$s" row 3 4 
+"$s" row 4 5 
+"$s" row 5 6 
 "$o" hideSlots 0 hideOff hideEmptyOff
 set obj {Busk Ivanhoe Tunnel}
 set o "$ws.Busk Ivanhoe Tunnel"
