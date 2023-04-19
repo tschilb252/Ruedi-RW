@@ -167,7 +167,10 @@ def update(i):
     # Figure out the date
     julianDate = forecast_date.dayofyear
     # Update the observations if julianDate = 0 (i.e. a new year)
-    ensembleDates, ensembleData = getUTEnsembleData(nc['Flow'][i+icount, :, :], nc['timestep'][i+icount, :])
+    if ENSEMBLE==True:
+        ensembleDates, ensembleData = getUTEnsembleData(nc['Flow'][i+icount, :, :], nc['timestep'][i+icount, :])
+    else:
+        ensembleDates, ensembleData = getUTForecastData(forecast_date)
     if i == 0:
         mask = (obs.index.tz_localize('America/Denver') >= dates[0]) & (
                     obs.index.tz_localize('America/Denver') <= (dates[-1] + DateOffset(days=366)))
@@ -196,6 +199,8 @@ def update(i):
 
 if __name__ == '__main__':
     NATURAL = True #Process natural inflow forecasts (True) or Actual (False)
+    ENSEMBLE= False #Plot ensemble or original forecast uncertainty bounds
+
     if NATURAL:
         sdi="100840" #SDI for data retreival from HDB
         fname="HydroForecast_short-term_doe-ruedi-reservoir_Natural_Flows.csv"
@@ -213,14 +218,18 @@ if __name__ == '__main__':
     obs = getHDB(sdi=sdi, sd=pd.to_datetime('2010-01-01'), ed=pd.to_datetime('2022-12-31'))  # pull in observed values
     #obs.index = obs.index.tz_convert('America/Denver')
     #obs = obs.resample('H').interpolate(method='polynomial', order=3)  # resample to hourly
-    #data=pd.read_csv(fname) #original data with confidence intervals
 
-    # initialize lists for files and dates, used to sort file list
-    #data['initialization_time']=pd.to_datetime(data['initialization_time'])
-    #data['valid_time'] = pd.to_datetime(data['valid_time'])
-    #alldates = data['initialization_time'].unique()
-    nc = netCDF4.Dataset(fp)
-    alldates=num2date(nc['time'][:])
+    if not(ENSEMBLE):
+        data=pd.read_csv(fname) #original data with confidence intervals
+        # initialize lists for files and dates, used to sort file list
+        data['initialization_time']=pd.to_datetime(data['initialization_time'])
+        data['valid_time'] = pd.to_datetime(data['valid_time'])
+        alldates = data['initialization_time'].unique()
+        NUM_ENSEMBLE_MEMBERS = 10
+    if ENSEMBLE:
+        nc = netCDF4.Dataset(fp)
+        NUM_ENSEMBLE_MEMBERS = 100
+        alldates=num2date(nc['time'][:])
     fig, ax, ensembleLines, observationLine, medianLine, dateText, locText, vl = InitializePlot()
         #loop through the range of years in the files
     icount=0 #counter for how many frames have been processed
@@ -230,11 +239,13 @@ if __name__ == '__main__':
         print("Creating animation for "+str(year))
         sd=pd.to_datetime(str(year)+'-01-01').tz_localize('utc')
         ed=pd.to_datetime(str(year)+'-12-31').tz_localize('utc')
-        #mask=(data['initialization_time']>=sd) & (data['initialization_time']<=ed)
-        #df=data.loc[mask]
-        #dates = df['initialization_time'].unique()
-        mask = (alldates >= sd) & (alldates <= ed) #mask dates to year selected
-        dates=alldates[mask]
+        if not (ENSEMBLE):
+            mask=(data['initialization_time']>=sd) & (data['initialization_time']<=ed)
+            df=data.loc[mask]
+            dates = df['initialization_time'].unique()
+        else:
+            mask = (alldates >= sd) & (alldates <= ed) #mask dates to year selected
+            dates=alldates[mask]
         ani = animation.FuncAnimation(fig, update, frames=len(dates), interval=10)
         # Set gif writer and save to file
         writer = animation.ImageMagickFileWriter(fps=7)

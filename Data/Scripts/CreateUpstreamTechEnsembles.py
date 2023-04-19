@@ -78,18 +78,20 @@ def getUTEnsembleData(forecast_date='None', df=pd.DataFrame()):
     return df2
 
 
-def RandomWalk(dims=1, step_n=241):
+def RandomWalk(dims=1, step_n=241,range=999,init_error=0.1):
     # Define parameters for the walk
-    step_set = [-1, 1]
+    step_set = [-range/step_n, range/step_n] #make the step set so it can reach outer bounds by the end of the walk
     origin = np.zeros((1, dims))
+    origin.fill((0.5+((np.random.rand()-0.5)*init_error))*range)
     # Simulate steps in 1D
     step_shape = (step_n - 1, dims)
-    # steps = np.random.choice(a=step_set, size=step_shape)
-    steps = np.random.exponential(scale=1, size=step_shape) * np.random.choice(a=step_set, size=step_shape)
+    steps = np.random.choice(a=step_set, size=step_shape)
+    #steps = np.random.exponential(scale=1, size=step_shape) * np.random.choice(a=step_set, size=step_shape)
     path = np.concatenate([origin, steps]).cumsum(0)
-    path = (path - path.min()) / (path.max() - path.min())  # normalize to 0-1
-    return path
-
+    #path = (path - path.min()) / (path.max() - path.min())  # normalize to 0-1
+    return path/range
+def flatten(l):
+    return [sublist[1] for sublist in l]
 
 ENS_TRACES = 100
 window = 15  # number of days to window for exceedence calculation
@@ -99,7 +101,8 @@ if __name__ == '__main__':
     os.chdir(path)
     if NATURAL:
         sdi = "100840"  # SDI for data retreival from HDB
-        fname = "HydroForecast_short-term_doe-ruedi-reservoir_Natural_Flows.csv"
+        #fname = "HydroForecast_short-term_doe-ruedi-reservoir_Natural_Flows.csv"
+        fname = "HydroForecast_model-v2_short-term_doe-ruedi-reservoir_Natural_Flows.csv"
         location = 'Ruedi Reservoir Natural Inflow'  # set the location name in the figure
     else:
         sdi = "101023"  # SDI for data retreival from HDB
@@ -125,7 +128,7 @@ if __name__ == '__main__':
     dr1 = pd.date_range(pd.to_datetime(datetime.datetime(2020, 1, 1)),
                         pd.to_datetime(datetime.datetime(2020, 12, 31)),
                         freq='D')  # set up a daily timestep loop for one year
-    #
+    #########################################Calculate errors from dataset##############################################
     # error = np.empty((366, (int(end.year - start.year)+1) * window, 241))  # loop thru each day of the year
     # error[:,:,:] = np.nan  # reset list of errors
     # for doy, dt in enumerate(dr1):
@@ -152,63 +155,112 @@ if __name__ == '__main__':
     #                 print("year "+str(year)+"window day " + str(count))
     #                 count = count + 1
     # # create ensemble
-    #
-    # with open('errors.pkl', 'wb') as f: pickle.dump(error, f)
+    #Plot monthly error exceedence curves##############################################################################
+    #with open(mypath+'errors.pkl', 'wb') as f: pickle.dump(error, f)
     with open('errors.pkl', 'rb') as f:
         error = pickle.load(f)  # np array: error[Julian Day of Year,values,timestep]
     fig, axs = plt.subplots(3, 4, figsize=(10, 6))
-    color=mpl.cm.Oranges(np.linspace(0, 1, 10))
-    for lead_step,c in zip(range(0,241),color):
+    color = mpl.cm.Oranges(np.linspace(0, 1, 10))
+    dr2 = pd.date_range(pd.to_datetime(datetime.datetime(2020, 1, 1)),
+                        pd.to_datetime(datetime.datetime(2020, 12, 31)),
+                        freq='M')  # set up a Monthly timestep loop for one year
+    for lead_step in range(0, 241): #loop thru forecast lead time, in hours
+        exceed = np.empty((3, 4, 10000))  # create 3d array
+        exceed[:] = np.nan  # initialize to nans
+        for day in dr1: #loop through day of years
+            row = int((day.month - 1) // 4) #calculate plot row
+            col = int((day.month - 1) % 4) #calculate plot column
+            vals=np.append(exceed[row,col,:],error[day.dayofyear - 1, :, lead_step])
+            vals = vals[~np.isnan(vals)]  # drop nans
+            idx = range(len(vals))
+            exceed[row,col,idx]=vals #append and expand array
+            #exceed[row,col]=exceed[row,col][~np.isnan(exceed[row,col])] #drop nans
+        for month in dr2:
+            row = int((month.month - 1) // 4)
+            col = int((month.month - 1) % 4)
+            vals = exceed[row, col, :]
+            vals = vals[~np.isnan(vals)]  # drop nans
+            size=1
+            if row==1 and col==0 and lead_step==0:
+                axs[row, col].plot(lead_step,np.percentile(vals,75), 'b.',label='25%-75% Exceedence',ms=size)
+                axs[row, col].plot(lead_step, np.percentile(vals, 95), 'r.', label='5%-95% Exceedence', ms=size)
+                axs[row, col].plot(lead_step, np.percentile(vals, 50), 'g.', label='Median', ms=size)
+            else:
+                axs[row, col].plot(lead_step, np.percentile(vals, 75), 'b.', ms=size)
+                axs[row, col].plot(lead_step, np.percentile(vals, 95), 'r.', ms=size)
+                axs[row, col].plot(lead_step, np.percentile(vals, 50), 'g.', ms=size)
+            axs[row, col].plot(lead_step, np.percentile(vals,25), 'b.',ms=size)
+            axs[row, col].plot(lead_step, np.percentile(vals,5),'r.',ms=size)
+
+    for month in dr2:
+        row = int((month.month - 1) // 4)
+        col = int((month.month - 1) % 4)
+        if col==0:
+            axs[row, col].set_ylabel("Forecast-Observation, cfs")
+        if row == 2:
+            axs[row, col].set_xlabel("Lead Time, hours")
+        axs[row, col].set_title(month.strftime("%B"))
+
+    # fig.colorbar(axs[row,col])
+    fig.tight_layout(pad=1.0)
+    fig.legend()
+    plt.savefig(mypath + 'errorcone.png')
+    plt.show()
+    plt.close(fig)
+
+    fig, axs = plt.subplots(3, 4, figsize=(10, 6))
+    color = mpl.cm.Oranges(np.linspace(0, 1, 10))
+    for lead_step, c in zip(range(0, 241), color):
         for day in dr1:
-            row=int((day.month-1)//4)
-            col=int((day.month-1)%4)
-            print(str(row),str(col))
-            axs[row,col].plot(np.sort(error[day.dayofyear-1,:,lead_step]),c=c)
+            row = int((day.month - 1) // 4)
+            col = int((day.month - 1) % 4)
+            print(str(row), str(col))
+            axs[row, col].plot(np.sort(error[day.dayofyear - 1, :, lead_step]), c=c)
         dr2 = pd.date_range(pd.to_datetime(datetime.datetime(2020, 1, 1)),
                             pd.to_datetime(datetime.datetime(2020, 12, 31)),
                             freq='M')  # set up a Monthly timestep loop for one year
         for month in dr2:
             row = int((month.month - 1) // 4)
             col = int((month.month - 1) % 4)
-            axs[row,col].set_title(month.strftime("%B"))
+            axs[row, col].set_title(month.strftime("%B"))
 
-    #fig.colorbar(axs[row,col])
+    # fig.colorbar(axs[row,col])
     fig.tight_layout(pad=1.0)
-    plt.show()
+    plt.savefig(mypath + 'errordist.png')
     #Create netcdf for output
-    nc, time_var, trace_var, timestep_var, flow_var = CreateNetCDF(data_path=path + "Ensembles\\",
-                                                                   filename="Ruedi_Ens.nc", n_traces=ENS_TRACES,
-                                                                   n_tsteps=241,
-                                                                   n_forecasts=len(alldates))
-    time_var[:] = date2num(alldates)  # load initialization times to netcdf file
-    trace_var[:] = range(0, ENS_TRACES)  # load trace numbers to netcdf file
-    for t,forecast_day in enumerate(alldates):
-        print(forecast_day.strftime('%Y-%m-%d'))
-        forecast = getUTEnsembleData(forecast_day, data)[
-            'discharge_q0.5']  # get median forecast from the upstream tech forecast
-        cols = range(0, ENS_TRACES)
-        cols = ["trace " + str(x) for x in cols]
-        timestep_var[t, :] = date2num(forecast.index)
-        ensemble = pd.DataFrame(data=np.nan, index=forecast.index, columns=cols)  # create empty dataframe for ensembles
-        walk_ensemble = pd.DataFrame(data=np.nan, index=forecast.index,
-                                     columns=cols)  # create empty dataframe for ensembles
-        trace_obs = obs[
-            (obs.index >= forecast.index[0]) & (obs.index <= forecast.index[-1])]  # window out the observations
-        for trace in range(0, ENS_TRACES):
-            rand_array = RandomWalk()  # get a random walk to pull exceedences from
-            walk_ensemble.iloc[:, trace] = rand_array
-            for tstep in range(0, 241):  # loop thru the timesteps
-                dist = np.sort(error[forecast_day.dayofyear - 1, :, tstep][
-                                   ~np.isnan(
-                                       error[forecast_day.dayofyear - 1, :, tstep])])  # extract the error distribution
-                # ensemble.iloc[tstep,trace]=forecast.iloc[tstep]+dist[floor(np.random.rand()*len(dist))]
-
-                if tstep == 0:  # initialize the forecast trace and error term
-                    ensemble.iloc[tstep, trace] = forecast.iloc[tstep] - dist[
-                        int(np.floor(np.random.rand() * len(dist) - 1))]
-                else:
-                    ensemble.iloc[tstep, trace] = forecast.iloc[tstep] - dist[
-                        int(np.floor(rand_array[tstep] * len(dist) - 1))]
-            flow_var[t, trace, :] = np.array(ensemble.iloc[:,trace])
-        # ensemble.to_csv(path + "Ensembles\\" + forecast_day.strftime('%Y-%m-%d') + ".csv")
-    nc.close()
+    # nc, time_var, trace_var, timestep_var, flow_var = CreateNetCDF(data_path=path + "Ensembles\\",
+    #                                                                filename="Ruedi_Ens.nc", n_traces=ENS_TRACES,
+    #                                                                n_tsteps=241,
+    #                                                                n_forecasts=len(alldates))
+    # time_var[:] = date2num(alldates)  # load initialization times to netcdf file
+    # trace_var[:] = range(0, ENS_TRACES)  # load trace numbers to netcdf file
+    # for t,forecast_day in enumerate(alldates):
+    #     print(forecast_day.strftime('%Y-%m-%d'))
+    #     error = getUTEnsembleData(forecast_day, data)
+    #     colnums=pd.DataFrame(error.columns).iloc[:,0].str.split('discharge_q')
+    #     colnums=flatten(colnums)
+    #     test=pd.DataFrame(columns=range(1,1000,1))#get the full distribution
+    #     for i,num in enumerate(colnums):
+    #         test.loc[:,int(float(num)*1000)]=error.iloc[:,i]
+    #     for col in test:
+    #         test[col] = pd.to_numeric(test[col], errors='coerce')
+    #     error_dist=test.interpolate(method='linear', axis=1).fillna(method='bfill',axis=1)
+    #     #error_dist.iloc[0, :].plot()
+    #     forecast = getUTEnsembleData(forecast_day, data)['discharge_q0.5']  # get median forecast from the upstream tech forecast
+    #     cols = range(0, ENS_TRACES)
+    #     cols = ["trace " + str(x) for x in cols]
+    #     timestep_var[t, :] = date2num(forecast.index)
+    #     ensemble = pd.DataFrame(data=np.nan, index=forecast.index, columns=cols)  # create empty dataframe for ensembles
+    #     walk_ensemble = pd.DataFrame(data=np.nan, index=forecast.index,
+    #                                  columns=cols)  # create empty dataframe for ensembles
+    #     trace_obs = obs[
+    #         (obs.index >= forecast.index[0]) & (obs.index <= forecast.index[-1])]  # window out the observations
+    #     for trace in range(0, ENS_TRACES):
+    #         rand_array = RandomWalk()  # get a random walk to pull exceedences from
+    #         walk_ensemble.iloc[:, trace] = rand_array
+    #         for tstep,step_dt in enumerate(forecast.index):  # loop thru the timesteps
+    #             dist = np.sort(error_dist.loc[step_dt, :])
+    #             ensemble.iloc[tstep, trace] = dist[int(np.floor(rand_array[tstep] * (len(dist) - 1)))]
+    #         flow_var[t, trace, :] = np.array(ensemble.iloc[:,trace])
+    #     # ensemble.to_csv(path + "Ensembles\\" + forecast_day.strftime('%Y-%m-%d') + ".csv")
+    # nc.close()
