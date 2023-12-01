@@ -1,4 +1,4 @@
-# SCT File Created 11/21/2023 1:44 PM
+# SCT File Created 11/30/2023 6:40 AM
 #  as C:/Users/JLanini/OneDrive - DOI/Documents/GitHub/Ruedi-RW/Models/Check Accounting Outflows.sct
 # Generated using RiverWare Version <RiverWare_Model 9.1.3 Patch>
 # Generated from Model File <RuediAcct_Rollback.mdl>
@@ -6,7 +6,7 @@
 #
 SCT 0 0 Version: 20.4
 SCT_PROPERTIES
-  SLOT_ITEM_CNT           13
+  SLOT_ITEM_CNT           34
   PRESIM_TSTEP_CNT        1
   POSTSIM_TSTEP_CNT       0
   TSTEP_AXIS_HORZ         False
@@ -24,8 +24,8 @@ SCT_PROPERTIES
   TSAGG_START_MDAY        1
   TSAGG_START_MONTH       0
 
-  WINDOW_WIDTH            1920
-  WINDOW_HEIGHT           1137
+  WINDOW_WIDTH            2560
+  WINDOW_HEIGHT           1377
   RIGHT_MARGIN            0
   DIAG_WINDOW_HEIGHT      0
 
@@ -170,16 +170,26 @@ SLOT_REF  3
   A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
 
 SLOT_REF  4
+  SLOT_LABEL        "Ruedi Reservoir.Spill Release Rate_Temp"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>.Spill Release Rate_Temp"
+  RW_SLOT_NAME      "Ruedi Reservoir.Spill Release Rate_Temp"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  5
   SLOT_LABEL        "Ruedi Reservoir.Max Pool_Date_Temp"
   SLOT_MULTILINE    "Ruedi Reservoir<br>.Max Pool_Date_Temp"
   RW_SLOT_NAME      "Ruedi Reservoir.Max Pool_Date_Temp"
   RW_SLOT_COL_INDEX 0
   SLOT_SUMFUNC      SLOT_SUMFUNC_LAST 0
   SLOT_DETAILS_OPEN False
-  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 135
   A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
 
-SLOT_REF  5
+SLOT_REF  6
   SLOT_LABEL        "Ruedi Reservoir.Release Rationale"
   SLOT_MULTILINE    "Ruedi Reservoir<br>.Release Rationale"
   RW_SLOT_NAME      "Ruedi Reservoir.Release Rationale"
@@ -189,10 +199,20 @@ SLOT_REF  5
   N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 542
   A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
 
-SLOT_DIV  6
+SLOT_DIV  7
   SLOT_LABEL        "Accounting"
 
-SLOT_REF  7
+SLOT_REF  8
+  SLOT_LABEL        "AccountingData.Storage Reconciliation"
+  SLOT_MULTILINE    "AccountingData<br>.Storage Reconciliation"
+  RW_SLOT_NAME      "AccountingData.Storage Reconciliation"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_LAST 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  9
   SLOT_LABEL        "Ruedi Reservoir.Historical Data.Cameo Call"
   SLOT_MULTILINE    "Ruedi Reservoir<br>.Historical Data<br>.Cameo Call"
   RW_SLOT_NAME      "Ruedi Reservoir.Historical Data.Cameo Call"
@@ -202,7 +222,197 @@ SLOT_REF  7
   N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
   A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
 
-SLOT_REF  8
+SLOT_REF  10
+  SLOT_LABEL        "AccountingData.StorableInflow"
+  SLOT_MULTILINE    "AccountingData<br>.StorableInflow"
+  RW_SLOT_NAME      "AccountingData.StorableInflow"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  11
+  SLOT_LABEL        "Ruedi Reservoir^First Fill.Transfers In"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^First Fill<br>.Transfers In"
+  RW_SLOT_NAME      "Ruedi Reservoir^First Fill.Transfers In"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  12
+  SLOT_LABEL        "Ruedi Reservoir^Second Fill.Transfers In"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Second Fill<br>.Transfers In"
+  RW_SLOT_NAME      "Ruedi Reservoir^Second Fill.Transfers In"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  13
+  SLOT_LABEL        "Ruedi Reservoir^Free River.Transfers In"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Free River<br>.Transfers In"
+  RW_SLOT_NAME      "Ruedi Reservoir^Free River.Transfers In"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  14
+  SLOT_LABEL        "Ruedi Reservoir^Second Fill.Transfers Out"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Second Fill<br>.Transfers Out"
+  RW_SLOT_NAME      "Ruedi Reservoir^Second Fill.Transfers Out"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  15
+  SLOT_LABEL        "Ruedi Reservoir^First Fill.Transfers Out"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^First Fill<br>.Transfers Out"
+  RW_SLOT_NAME      "Ruedi Reservoir^First Fill.Transfers Out"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  16
+  SLOT_LABEL        "Ruedi Reservoir^Free River.Transfers Out"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Free River<br>.Transfers Out"
+  RW_SLOT_NAME      "Ruedi Reservoir^Free River.Transfers Out"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  17
+  SLOT_LABEL        "Ruedi Reservoir^Inactive Pool.Transfers In"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Inactive Pool<br>.Transfers In"
+  RW_SLOT_NAME      "Ruedi Reservoir^Inactive Pool.Transfers In"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  18
+  SLOT_LABEL        "Ruedi Reservoir^Dead Pool.Storage"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Dead Pool<br>.Storage"
+  RW_SLOT_NAME      "Ruedi Reservoir^Dead Pool.Storage"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_LAST 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  19
+  SLOT_LABEL        "Ruedi Reservoir^Inactive Pool.Storage"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Inactive Pool<br>.Storage"
+  RW_SLOT_NAME      "Ruedi Reservoir^Inactive Pool.Storage"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_LAST 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  20
+  SLOT_LABEL        "Ruedi Reservoir^Replacement Pool.Transfers In"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Replacement Pool<br>.Transfers In"
+  RW_SLOT_NAME      "Ruedi Reservoir^Replacement Pool.Transfers In"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  21
+  SLOT_LABEL        "Ruedi Reservoir^Replacement Pool.Storage"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Replacement Pool<br>.Storage"
+  RW_SLOT_NAME      "Ruedi Reservoir^Replacement Pool.Storage"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_LAST 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  22
+  SLOT_LABEL        "AccountingData.Regulation Pool Transfers In"
+  SLOT_MULTILINE    "AccountingData<br>.Regulation Pool Transfers In"
+  RW_SLOT_NAME      "AccountingData.Regulation Pool Transfers In"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  23
+  SLOT_LABEL        "AccountingData.Regulation Pool Storage"
+  SLOT_MULTILINE    "AccountingData<br>.Regulation Pool Storage"
+  RW_SLOT_NAME      "AccountingData.Regulation Pool Storage"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_LAST 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  24
+  SLOT_LABEL        "Ruedi Reservoir^Recreation Pool.Transfers In"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Recreation Pool<br>.Transfers In"
+  RW_SLOT_NAME      "Ruedi Reservoir^Recreation Pool.Transfers In"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  25
+  SLOT_LABEL        "Ruedi Reservoir^Recreation Pool.Storage"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Recreation Pool<br>.Storage"
+  RW_SLOT_NAME      "Ruedi Reservoir^Recreation Pool.Storage"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_LAST 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  26
+  SLOT_LABEL        "Ruedi Reservoir^Inactive Pool.Transfers Out"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Inactive Pool<br>.Transfers Out"
+  RW_SLOT_NAME      "Ruedi Reservoir^Inactive Pool.Transfers Out"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  27
+  SLOT_LABEL        "Ruedi Reservoir^Recreation Pool.Transfers Out"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Recreation Pool<br>.Transfers Out"
+  RW_SLOT_NAME      "Ruedi Reservoir^Recreation Pool.Transfers Out"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  28
+  SLOT_LABEL        "Ruedi Reservoir^Replacement Pool.Transfers Out"
+  SLOT_MULTILINE    "Ruedi Reservoir<br>^Replacement Pool<br>.Transfers Out"
+  RW_SLOT_NAME      "Ruedi Reservoir^Replacement Pool.Transfers Out"
+  RW_SLOT_COL_INDEX 0
+  SLOT_SUMFUNC      SLOT_SUMFUNC_AVE 0
+  SLOT_DETAILS_OPEN False
+  N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+  A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
+
+SLOT_REF  29
   SLOT_LABEL        "Fryingpan River Near Ruedi^Contract.Inflow"
   SLOT_MULTILINE    "Fryingpan River Near Ruedi<br>^Contract<br>.Inflow"
   RW_SLOT_NAME      "Fryingpan River Near Ruedi^Contract.Inflow"
@@ -212,7 +422,7 @@ SLOT_REF  8
   N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
   A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
 
-SLOT_REF  9
+SLOT_REF  30
   SLOT_LABEL        "Fryingpan River Near Ruedi^Discretionary.Inflow"
   SLOT_MULTILINE    "Fryingpan River Near Ruedi<br>^Discretionary<br>.Inflow"
   RW_SLOT_NAME      "Fryingpan River Near Ruedi^Discretionary.Inflow"
@@ -222,7 +432,7 @@ SLOT_REF  9
   N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
   A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
 
-SLOT_REF  10
+SLOT_REF  31
   SLOT_LABEL        "Fryingpan River Near Ruedi^Allocatable Flow.Inflow"
   SLOT_MULTILINE    "Fryingpan River Near Ruedi<br>^Allocatable Flow<br>.Inflow"
   RW_SLOT_NAME      "Fryingpan River Near Ruedi^Allocatable Flow.Inflow"
@@ -232,7 +442,7 @@ SLOT_REF  10
   N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
   A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
 
-SLOT_REF  11
+SLOT_REF  32
   SLOT_LABEL        "Ruedi Reservoir.Fish Release Cumulative"
   SLOT_MULTILINE    "Ruedi Reservoir<br>.Fish Release Cumulative"
   RW_SLOT_NAME      "Ruedi Reservoir.Fish Release Cumulative"
@@ -242,7 +452,7 @@ SLOT_REF  11
   N_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
   A_SLOT_COL_WIDTH  COLFIT_METHOD_MANUAL 120
 
-SLOT_REF  12
+SLOT_REF  33
   SLOT_LABEL        "Ruedi Reservoir.Historical Data.Endangered Fish Release"
   SLOT_MULTILINE    "Ruedi Reservoir<br>.Historical Data<br>.Endangered Fish Release"
   RW_SLOT_NAME      "Ruedi Reservoir.Historical Data.Endangered Fish Release"
